@@ -1,0 +1,44 @@
+- name: Deploy 3Tier application
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - common
+  tags:
+    - common   
+    
+- name: Deploy 3Tier application
+  hosts: frontends
+  gather_facts: true
+  become: true
+  roles:
+    - haproxy
+  tags:
+    - haproxy
+
+- name: Deploy 3Tier application
+  hosts: appdbs
+  gather_facts: true
+  become: true
+  roles:
+    - postgresql
+  tags:
+    - postgresql
+
+- name: Deploy 3Tier application
+  hosts: apps
+  gather_facts: true
+  become: true
+  roles:
+    - app
+  tags:
+    - app
+
+- name: Clean  application
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - cleaner
+  tags:
+    - cleaner

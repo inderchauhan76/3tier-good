@@ -1,0 +1,5 @@
+---
+# vars file for app
+#
+tomcat_web_root: /usr/share/tomcat/webapps
+web_service: tomcat

@@ -1,0 +1,36 @@
+---
+# tasks file for app
+#
+- name: Install "{{ web_service }}"
+  yum:
+    name: "{{ web_service }}"
+    state: latest
+
+- name: Enable "{{ web_service }}"  at boot
+  service:
+    name: "{{ web_service }}"
+    enabled: yes
+
+- name: Create  default web directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ tomcat_web_root }}/ROOT"
+    - "{{ tomcat_web_root }}/ansible"
+    - "{{ tomcat_web_root }}/inder"
+
+- name: copy static index.html to tomcat webroot for all three applications
+  template:
+    src: "{{ item.name }}"
+    dest: "{{ tomcat_web_root }}/{{ item.dest_dir }}/index.html"
+    mode: 0644
+  with_items:
+    - { name: index.html.j2, dest_dir: ROOT }
+    - { name: index.html.app1, dest_dir: ansible }
+    - { name: index.html.app2, dest_dir: inder }
+
+- name: Restart "{{ web_service }}"
+  service:
+    name: "{{ web_service }}"
+    state: restarted
